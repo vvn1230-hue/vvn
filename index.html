@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎪 期末抽獎大會 🧸</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Zen Maru Gothic -->
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            macaron: {
+              pink: '#FFD1DC',
+              pinkLight: '#FFF0F5',
+              pinkDark: '#FF9EAA',
+              yellow: '#FFF3B0',
+              yellowDark: '#FFE066',
+              blue: '#E0F2FE',
+              blueDark: '#BAE6FD',
+              green: '#D1FAE5',
+              purple: '#E9D5FF',
+              text: '#5B4B68',
+              accent: '#FF7B9C'
+            }
+          },
+          fontFamily: {
+            kawaii: ['"Zen Maru Gothic"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      background: linear-gradient(135deg, #FFF0F5 0%, #E0F2FE 50%, #F3E8FF 100%);
+      color: #5B4B68;
+      overflow-x: hidden;
+    }
+
+    /* Q彈按鈕 */
+    .btn-kawaii {
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease, background-color 0.2s;
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.08);
+    }
+    .btn-kawaii:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 0 rgba(0, 0, 0, 0.08);
+    }
+    .btn-kawaii:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+    }
+    .btn-kawaii:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* 可愛卡片 */
+    .card-kawaii {
+      box-shadow: 0 8px 20px -4px rgba(255, 123, 156, 0.15), 0 4px 8px -4px rgba(0, 0, 0, 0.03);
+      border: 3px solid #FFFFFF;
+    }
+
+    /* 自訂捲動條 */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #FFF0F5; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #FFB6C1; border-radius: 10px; }
+
+    /* ================= 模式 1：扭蛋機動畫 ================= */
+    .gacha-body {
+      background: linear-gradient(180deg, #FF9EAA 0%, #FF7B9C 100%);
+      box-shadow: inset -5px -5px 0px rgba(0,0,0,0.08), inset 5px 5px 0px rgba(255,255,255,0.4);
+    }
+    .gacha-glass {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(2px);
+      box-shadow: inset 0 0 12px rgba(255,255,255,0.9), inset -4px -4px 10px rgba(0,0,0,0.05);
+      border: 4px solid #FFFFFF;
+    }
+    @keyframes kawaiiShake {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      20% { transform: translate(-4px, 3px) rotate(-8deg); }
+      40% { transform: translate(4px, -3px) rotate(8deg); }
+      60% { transform: translate(-3px, -2px) rotate(-4deg); }
+      80% { transform: translate(3px, 3px) rotate(4deg); }
+    }
+    .shaking .ball-item { animation: kawaiiShake 0.35s ease-in-out infinite; }
+    .spin-knob { transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); transform: rotate(360deg); }
+    @keyframes dropBallAnim {
+      0% { transform: translateY(-30px) scale(0.3); opacity: 0; }
+      70% { transform: translateY(10px) scale(1.15); opacity: 1; }
+      100% { transform: translateY(0px) scale(1); opacity: 1; }
+    }
+    .animate-drop { animation: dropBallAnim 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+    /* ================= 模式 2：夾娃娃機動畫 ================= */
+    @keyframes plushBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    .plush-idle { animation: plushBounce 2s ease-in-out infinite; }
+
+    /* ================= 模式 3：釣魚池塘動畫 ================= */
+    @keyframes swimRight {
+      0% { transform: translateX(-20px) scaleX(1); }
+      48% { transform: translateX(130px) scaleX(1); }
+      50% { transform: translateX(130px) scaleX(-1); }
+      98% { transform: translateX(-20px) scaleX(-1); }
+      100% { transform: translateX(-20px) scaleX(1); }
+    }
+    @keyframes swimLeft {
+      0% { transform: translateX(120px) scaleX(-1); }
+      48% { transform: translateX(-20px) scaleX(-1); }
+      50% { transform: translateX(-20px) scaleX(1); }
+      98% { transform: translateX(120px) scaleX(1); }
+      100% { transform: translateX(120px) scaleX(-1); }
+    }
+    .fish-swim-1 { animation: swimRight 5s ease-in-out infinite; }
+    .fish-swim-2 { animation: swimLeft 6s ease-in-out infinite; }
+    @keyframes waveFlow {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(-10px); }
+    }
+    .water-wave { animation: waveFlow 3s ease-in-out infinite; }
+
+    /* ================= 模式 4：射氣球動畫 ================= */
+    @keyframes balloonFloat {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-5px) rotate(2deg); }
+    }
+    .balloon-float { animation: balloonFloat 2.2s ease-in-out infinite; }
+    @keyframes popBurst {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.6); opacity: 0.8; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+    .balloon-pop { animation: popBurst 0.3s ease-out forwards; }
+
+    /* ================= 模式 5：幸運大轉盤動畫 ================= */
+    .wheel-disc {
+      background: conic-gradient(
+        #FFD1DC 0deg 45deg,
+        #FFF3B0 45deg 90deg,
+        #BAE6FD 90deg 135deg,
+        #D1FAE5 135deg 180deg,
+        #E9D5FF 180deg 225deg,
+        #FED7AA 225deg 270deg,
+        #FBCFE8 270deg 315deg,
+        #C7D2FE 315deg 360deg
+      );
+      transition: transform 3.2s cubic-bezier(0.15, 0.85, 0.22, 1.02);
+    }
+
+    /* ================= 模式 6：可愛拉霸機動畫 ================= */
+    @keyframes slotBlur {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+      100% { transform: translateY(6px); }
+    }
+    .slot-spinning {
+      animation: slotBlur 0.1s linear infinite;
+      filter: blur(1.2px);
+    }
+
+    /* ================= 模式 7：驚喜盲盒牆動畫 ================= */
+    @keyframes boxWobble {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-10deg) scale(1.1); }
+      50% { transform: rotate(10deg) scale(1.15); }
+      75% { transform: rotate(-6deg) scale(1.1); }
+    }
+    .box-wobble { animation: boxWobble 0.45s ease-in-out; }
+  </style>
+</head>
+
+<body class="min-h-screen p-2.5 md:p-5 flex flex-col items-center">
+
+  <!-- 主容器 (加寬為 max-w-7xl 以容納三欄佈局) -->
+  <div class="w-full max-w-7xl">
+    
+    <!-- 頂部標頭 & 音效開關 -->
+    <header class="relative text-center mb-3 md:mb-4 flex items-center justify-center">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-black text-macaron-accent flex items-center justify-center gap-2 drop-shadow-sm">
+          <span>🎪</span> 期末抽獎大會 <span>🎉</span>
+        </h1>
+        <p class="text-xs text-macaron-text font-medium mt-0.5 opacity-80">
+          每一張抽獎券，都是一次幸運機會！
+        </p>
+      </div>
+      <!-- 音效開關 -->
+      <button id="soundToggleBtn" onclick="toggleSound()" title="切換音效"
+        class="btn-kawaii absolute right-0 top-1 bg-white/90 text-macaron-text px-2.5 py-1.5 rounded-full text-xs font-bold border-2 border-macaron-pink flex items-center gap-1">
+        <span id="soundIcon">🔊</span> <span class="hidden sm:inline" id="soundText">音效開</span>
+      </button>
+    </header>
+
+    <!-- 三欄主佈局 -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+      
+      <!-- ================= 【新增】最左側欄：班級名單預設庫 (佔 3 欄) ================= -->
+      <div class="lg:col-span-3 space-y-3">
+        <section class="bg-white/95 rounded-3xl p-3.5 card-kawaii border-macaron-blueDark/50">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="font-bold text-sm text-sky-600 flex items-center gap-1">
+              <span>🏫</span> 班級名單庫
+            </h2>
+            <button onclick="openClassModal()" class="btn-kawaii px-2.5 py-1 bg-macaron-blue text-sky-700 font-black text-xs rounded-xl border border-sky-200">
+              ＋ 新增班級
+            </button>
+          </div>
+          
+          <p class="text-[11px] text-gray-500 mb-2.5 leading-relaxed">
+            預先存好各班學生與券數，上課時點選班級即可一鍵匯入抽獎！
+          </p>
+
+          <!-- 已儲存班級列表 -->
+          <div id="savedClassesList" class="space-y-2 max-h-[340px] overflow-y-auto pr-1">
+            <!-- JS 動態渲染班級卡片 -->
+          </div>
+
+          <!-- 將目前名單快速存成班級 -->
+          <div class="mt-3 pt-2.5 border-t border-gray-100">
+            <button onclick="saveCurrentToNewClass()" class="btn-kawaii w-full py-1.5 bg-macaron-green text-emerald-700 font-bold text-xs rounded-xl border border-emerald-200">
+              💾 將目前右側名單存為班級
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <!-- ================= 中間欄：目前抽獎名單與獎項設定 (佔 4 欄) ================= -->
+      <div class="lg:col-span-4 space-y-3">
+        
+        <!-- 1. 學生名單管理 -->
+        <section class="bg-white/95 rounded-3xl p-3.5 card-kawaii">
+          <div class="flex items-center justify-between mb-1.5">
+            <h2 class="font-bold text-sm text-macaron-accent flex items-center gap-1">
+              <span>👨‍🎓</span> 本次抽獎名單
+            </h2>
+            <span id="activeClassBadge" class="text-[11px] px-2 py-0.5 rounded-full bg-sky-100 text-sky-700 font-bold hidden">
+              目前班級
+            </span>
+          </div>
+          <div class="mb-2">
+            <span id="studentTotalBadge" class="inline-block text-xs px-2.5 py-0.5 rounded-full bg-macaron-pinkLight text-macaron-accent font-bold border border-macaron-pink">
+              學生人數：0｜抽獎券總數：0
+            </span>
+          </div>
+
+          <!-- 精簡快速貼上區塊 -->
+          <div class="bg-macaron-pinkLight/70 p-2 rounded-2xl border border-macaron-pinkDark/30 mb-2">
+            <textarea id="batchInput" rows="2" 
+              class="w-full p-1.5 text-xs rounded-xl border border-white focus:outline-none focus:border-macaron-pinkDark bg-white/90 resize-none"
+              placeholder="📋 快速批次貼上 (Excel/Word 複製)：&#10;張小明 3 或 李小華,2 (純姓名預設1張)"></textarea>
+            <div class="flex gap-1.5 mt-1.5">
+              <button onclick="parseBatchInput(true)" class="btn-kawaii flex-1 py-1 px-2 bg-macaron-pink text-macaron-text font-bold text-xs rounded-xl border border-white">
+                ⚡ 覆蓋匯入
+              </button>
+              <button onclick="parseBatchInput(false)" class="btn-kawaii flex-1 py-1 px-2 bg-macaron-blue text-macaron-text font-bold text-xs rounded-xl border border-white">
+                ➕ 追加匯入
+              </button>
+            </div>
+          </div>
+
+          <!-- 可捲動學生明細 -->
+          <div class="max-h-36 overflow-y-auto pr-1 space-y-1 mb-2" id="studentsList"></div>
+
+          <!-- 學生操作按鈕 -->
+          <div class="flex gap-2">
+            <button onclick="addStudent()" class="btn-kawaii flex-1 py-1.5 bg-macaron-yellow text-macaron-text font-bold text-xs rounded-xl">
+              ＋ 新增學生
+            </button>
+            <button onclick="clearAllStudents()" class="btn-kawaii py-1.5 px-3 bg-red-100 text-red-500 font-bold text-xs rounded-xl">
+              🗑️ 清空全部
+            </button>
+          </div>
+        </section>
+
+        <!-- 2. 獎項設定 -->
+        <section class="bg-white/95 rounded-3xl p-3.5 card-kawaii">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="font-bold text-sm text-macaron-accent flex items-center gap-1">
+              <span>🎁</span> 獎項設定
+            </h2>
+            <span class="text-[11px] text-gray-400 font-bold">依序抽出各獎項</span>
+          </div>
+
+          <!-- 可捲動獎項明細 -->
+          <div class="max-h-32 overflow-y-auto pr-1 space-y-1 mb-2" id="prizesList"></div>
+
+          <button onclick="addPrize()" class="btn-kawaii w-full py-1.5 bg-macaron-purple text-macaron-text font-bold text-xs rounded-xl">
+            ＋ 新增獎項
+          </button>
+        </section>
+
+      </div>
+
+      <!-- ================= 右側欄：多模式互動抽獎機台 & 得獎名單 (佔 5 欄) ================= -->
+      <div class="lg:col-span-5 space-y-3">
+        
+        <!-- 互動抽獎機台卡片 -->
+        <section class="bg-white/95 rounded-3xl p-3.5 md:p-4 card-kawaii">
+          
+          <!-- 頂部 8 種模式切換器分頁按鈕 (4x2 網格) -->
+          <div class="grid grid-cols-4 gap-1.5 bg-macaron-pinkLight/80 p-1.5 rounded-2xl mb-3 border border-macaron-pink/50">
+            <button id="tab-gacha" onclick="switchMode('gacha')" class="mode-tab btn-kawaii py-1.5 px-1 rounded-xl text-[11px] sm:text-xs font-black bg-macaron-accent text-white flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1">
+              <span>🔮</span><span>扭蛋機</span>
+            </button>
+            <button id="tab-claw" onclick="switchMode('claw')" class="mode-tab btn-kawaii py-1.5 px-1 rounded-xl text-[11px] sm:text-xs font-bold bg-white/80 text-macaron-text flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1">
+              <span>🧸</span><span>夾娃娃機</span>
+            </button>
+            <button id="tab-fishing" onclick="switchMode('fishing')" class="mode-tab btn-kawaii py-1.5 px-1 rounded-xl text-[11px] sm:text-xs font-bold bg-white/80 text-macaron-text flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1">
+              <span>🎣</span><span>幸運釣魚</span>
+            </button>
+            <button id="tab-balloon" onclick="switchMode('balloon')" class="mode-tab btn-kawaii py-1.5 px-1 rounded-xl text-[11px] sm:text-xs font-bold bg-white/80 text-macaron-text flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1">
+              <span>🎈</span><span>射氣球</span>
+            </button>
+            <button id="tab-wheel" onclick="switchMode('wheel')" class="mode-tab btn-kawaii py-1.5 px-1 rounded-xl text-[11px] sm:text-xs font-bold bg-white/80 text-macaron-text flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1">
+              <span>🎡</span><span>大轉盤</span>
+            </button>
+            <button id="tab-slot" onclick="switchMode('slot')" class="mode-tab btn-kawaii py-1.5 px-1 rounded-xl text-[11px] sm:text-xs font-bold bg-white/80 text-macaron-text flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1">
+              <span>🎰</span><span>拉霸機</span>
+            </button>
+            <button id="tab-blindbox" onclick="switchMode('blindbox')" class="mode-tab btn-kawaii py-1.5 px-1 rounded-xl text-[11px] sm:text-xs font-bold bg-white/80 text-macaron-text flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1">
+              <span>🧧</span><span>驚喜盲盒</span>
+            </button>
+            <button id="tab-scratch" onclick="switchMode('scratch')" class="mode-tab btn-kawaii py-1.5 px-1 rounded-xl text-[11px] sm:text-xs font-bold bg-white/80 text-macaron-text flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1">
+              <span>🎫</span><span>刮刮樂</span>
+            </button>
+          </div>
+
+          <!-- 機台舞台與控制區 (為適應 5 欄寬度，採用垂直緊湊置中排列) -->
+          <div class="flex flex-col items-center justify-between gap-3">
+            
+            <!-- 8種模式互動視覺舞台 -->
+            <div class="w-56 h-60 flex items-center justify-center relative select-none shrink-0">
+              
+              <!-- 【模式 1：扭蛋機】 -->
+              <div id="stage-gacha" class="stage-view w-full h-full flex flex-col items-center justify-center">
+                <div id="gachaMachine" class="gacha-body w-44 h-56 rounded-t-[85px] rounded-b-[24px] p-2.5 flex flex-col items-center relative">
+                  <div class="absolute -top-2.5 left-4 w-6 h-6 bg-macaron-accent rounded-full"></div>
+                  <div class="absolute -top-2.5 right-4 w-6 h-6 bg-macaron-accent rounded-full"></div>
+                  <div class="gacha-glass w-32 h-32 rounded-full relative overflow-hidden flex items-center justify-center">
+                    <div id="ballsContainer" class="absolute inset-0 w-full h-full"></div>
+                    <div class="absolute top-2 left-3 w-7 h-3.5 bg-white/60 rounded-full rotate-[-30deg]"></div>
+                  </div>
+                  <div class="mt-2 cursor-pointer" onclick="triggerDraw()">
+                    <div id="gachaKnob" class="w-10 h-10 rounded-full bg-white border-4 border-macaron-pinkDark flex items-center justify-center shadow btn-kawaii">
+                      <div class="w-6 h-2 bg-macaron-accent rounded-full"></div>
+                    </div>
+                  </div>
+                  <div class="absolute bottom-1.5 w-16 h-7 bg-gray-800/80 rounded-t-xl border-2 border-gray-700 flex items-center justify-center overflow-visible">
+                    <div id="gachaExit" class="relative w-full h-full flex items-center justify-center"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 【模式 2：夾娃娃機】 -->
+              <div id="stage-claw" class="stage-view hidden w-full h-full flex flex-col items-center justify-center">
+                <div class="w-48 h-56 bg-gradient-to-b from-sky-200 to-pink-100 rounded-t-3xl rounded-b-2xl border-4 border-macaron-pinkDark shadow-inner relative overflow-hidden flex flex-col justify-between">
+                  <div class="bg-macaron-accent text-white text-[11px] font-black text-center py-1 tracking-wider shadow-sm z-10">
+                    ★ CATCH LUCKY ★
+                  </div>
+                  <div class="absolute top-6 left-0 right-0 h-1.5 bg-pink-300/80 z-10"></div>
+                  <div id="clawAssembly" class="absolute top-6 left-1/2 -translate-x-1/2 flex flex-col items-center z-20 transition-all duration-500">
+                    <div id="clawRope" class="w-1 h-4 bg-gray-500 transition-all duration-500"></div>
+                    <div class="w-6 h-3 bg-macaron-yellowDark rounded-t-lg border border-amber-400"></div>
+                    <div class="relative flex items-start justify-center w-12 h-8">
+                      <div id="clawLeft" class="w-2 h-7 bg-gray-400 rounded-full origin-top rotate-[25deg] transition-transform duration-300 -mr-1"></div>
+                      <div id="clawGrabbedItem" class="text-2xl mt-1 opacity-0 transition-opacity duration-200">🎁</div>
+                      <div id="clawRight" class="w-2 h-7 bg-gray-400 rounded-full origin-top -rotate-[25deg] transition-transform duration-300 -ml-1"></div>
+                    </div>
+                  </div>
+                  <div class="relative h-20 w-full flex items-end justify-around px-3 pb-2 z-10">
+                    <span class="plush-idle text-2xl" style="animation-delay: 0s;">🧸</span>
+                    <span class="plush-idle text-2xl" style="animation-delay: 0.3s;">🐰</span>
+                    <span class="plush-idle text-2xl" style="animation-delay: 0.6s;">🎁</span>
+                    <span class="plush-idle text-2xl" style="animation-delay: 0.9s;">🐱</span>
+                    <div class="absolute bottom-0 left-1 w-11 h-9 bg-gray-800/75 rounded-t-lg border-t-2 border-x-2 border-white flex items-center justify-center text-[9px] text-white font-bold">
+                      出口
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 【模式 3：幸運釣魚】 -->
+              <div id="stage-fishing" class="stage-view hidden w-full h-full flex flex-col items-center justify-center">
+                <div class="w-48 h-56 bg-gradient-to-b from-amber-50 via-sky-100 to-cyan-200 rounded-3xl border-4 border-sky-300 shadow-inner relative overflow-hidden">
+                  <div class="absolute top-2 left-3 text-xl">☀️</div>
+                  <div class="absolute top-3 right-4 text-lg opacity-80">☁️</div>
+                  <div class="absolute top-8 right-0 w-28 h-1.5 bg-amber-600 rounded-l-full -rotate-12 origin-right z-20"></div>
+                  <div id="fishingLine" class="absolute top-12 left-[42%] w-0.5 h-8 bg-gray-500 transition-all duration-500 z-20 flex flex-col items-center justify-end">
+                    <div id="hookedCatch" class="text-2xl translate-y-3 transition-transform">🪝</div>
+                  </div>
+                  <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-cyan-300/80 to-blue-400/90 border-t-4 border-white/70">
+                    <div class="water-wave text-white/60 text-xs tracking-widest text-center -mt-2.5">〰〰〰〰〰〰</div>
+                    <div class="fish-swim-1 absolute top-4 left-2 text-2xl">🐠</div>
+                    <div class="fish-swim-2 absolute top-12 left-4 text-2xl">🐡</div>
+                    <div class="fish-swim-1 absolute bottom-3 left-6 text-xl" style="animation-duration: 7s;">🐙</div>
+                    <div class="absolute bottom-2 right-4 text-2xl animate-pulse">🧰</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 【模式 4：射氣球】 -->
+              <div id="stage-balloon" class="stage-view hidden w-full h-full flex flex-col items-center justify-center">
+                <div class="w-48 h-56 bg-gradient-to-b from-purple-100 to-pink-100 rounded-3xl border-4 border-purple-300 shadow-inner relative overflow-hidden p-2.5 flex flex-col justify-between">
+                  <div class="text-center text-[11px] font-black text-purple-600 bg-white/80 rounded-full py-0.5 shadow-sm">
+                    🎪 幸運氣球牆 (可直接點氣球)
+                  </div>
+                  <div id="balloonGrid" class="grid grid-cols-3 gap-1.5 place-items-center my-auto z-10"></div>
+                  <div id="flyingDart" class="absolute bottom-2 left-1/2 -translate-x-1/2 text-2xl transition-all duration-300 pointer-events-none z-30">
+                    🎯
+                  </div>
+                </div>
+              </div>
+
+              <!-- 【模式 5：幸運大轉盤】 -->
+              <div id="stage-wheel" class="stage-view hidden w-full h-full flex flex-col items-center justify-center">
+                <div class="relative w-52 h-56 flex items-center justify-center">
+                  <div class="absolute top-0 z-30 text-2xl drop-shadow-md">🔻</div>
+                  <div id="wheelDisc" onclick="triggerDraw()" class="wheel-disc w-48 h-48 rounded-full border-4 border-white shadow-lg relative cursor-pointer flex items-center justify-center">
+                    <span class="absolute top-2.5 left-1/2 -translate-x-1/2 text-base">⭐</span>
+                    <span class="absolute top-6 right-7 text-base rotate-45">🍀</span>
+                    <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-base rotate-90">🎁</span>
+                    <span class="absolute bottom-6 right-7 text-base rotate-[135deg]">👑</span>
+                    <span class="absolute bottom-2.5 left-1/2 -translate-x-1/2 text-base rotate-180">🍓</span>
+                    <span class="absolute bottom-6 left-7 text-base -rotate-[135deg]">🧸</span>
+                    <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-base -rotate-90">💎</span>
+                    <span class="absolute top-6 left-7 text-base -rotate-45">🌈</span>
+                    <div class="w-11 h-11 rounded-full bg-white border-4 border-macaron-accent shadow flex items-center justify-center text-xs font-black text-macaron-accent">
+                      GO!
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 【模式 6：可愛拉霸機】 -->
+              <div id="stage-slot" class="stage-view hidden w-full h-full flex flex-col items-center justify-center">
+                <div class="w-52 h-56 bg-gradient-to-b from-amber-300 to-pink-300 rounded-3xl border-4 border-white shadow-lg p-3 flex flex-col justify-between relative">
+                  <div class="bg-white/95 rounded-full py-1 px-2 text-center text-xs font-black text-macaron-accent shadow-sm flex items-center justify-around">
+                    <span>✨</span><span>LUCKY 777</span><span>✨</span>
+                  </div>
+                  <div class="bg-white rounded-2xl border-4 border-amber-400/70 p-2 grid grid-cols-3 gap-1.5 shadow-inner my-auto">
+                    <div class="h-20 bg-macaron-pinkLight rounded-xl flex items-center justify-center text-3xl border border-pink-200 overflow-hidden">
+                      <span id="slotReel0">🍓</span>
+                    </div>
+                    <div class="h-20 bg-macaron-yellow/60 rounded-xl flex items-center justify-center text-3xl border border-amber-200 overflow-hidden">
+                      <span id="slotReel1">⭐</span>
+                    </div>
+                    <div class="h-20 bg-macaron-blue/60 rounded-xl flex items-center justify-center text-3xl border border-sky-200 overflow-hidden">
+                      <span id="slotReel2">👑</span>
+                    </div>
+                  </div>
+                  <button type="button" onclick="triggerDraw()" class="btn-kawaii w-full py-1.5 bg-macaron-accent text-white font-black text-xs rounded-xl border-2 border-white">
+                    🕹️ 拉下幸運拉桿
+                  </button>
+                </div>
+              </div>
+
+              <!-- 【模式 7：驚喜盲盒牆】 -->
+              <div id="stage-blindbox" class="stage-view hidden w-full h-full flex flex-col items-center justify-center">
+                <div class="w-52 h-56 bg-gradient-to-b from-amber-100 to-rose-100 rounded-3xl border-4 border-amber-300/80 shadow-inner p-2.5 flex flex-col justify-between">
+                  <div class="text-center text-[11px] font-black text-amber-700 bg-white/85 rounded-full py-0.5 shadow-sm">
+                    🧧 點擊任一盲盒開獎
+                  </div>
+                  <div id="blindBoxGrid" class="grid grid-cols-3 gap-1.5 place-items-center my-auto"></div>
+                </div>
+              </div>
+
+              <!-- 【模式 8：魔法刮刮樂】 -->
+              <div id="stage-scratch" class="stage-view hidden w-full h-full flex flex-col items-center justify-center">
+                <div class="w-52 h-56 bg-gradient-to-br from-yellow-200 via-pink-100 to-purple-200 rounded-3xl border-4 border-white shadow-lg p-2.5 flex flex-col justify-between relative">
+                  <div class="text-center text-[11px] font-black text-macaron-accent bg-white/90 rounded-full py-0.5 shadow-sm">
+                    🪙 用手指/滑鼠刮開銀漆
+                  </div>
+                  <div class="relative w-full h-36 rounded-2xl overflow-hidden border-2 border-amber-300 bg-white shadow-inner flex flex-col items-center justify-center p-2 text-center">
+                    <div id="scratchUnderneath" class="flex flex-col items-center justify-center">
+                      <span class="text-2xl mb-0.5">🌟</span>
+                      <span id="scratchPrizeLabel" class="text-[11px] font-bold text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">準備刮開好運</span>
+                      <span id="scratchWinnerLabel" class="text-lg font-black text-macaron-accent mt-0.5">？？？</span>
+                    </div>
+                    <canvas id="scratchCanvas" width="180" height="144" class="absolute inset-0 w-full h-full cursor-crosshair touch-none z-20"></canvas>
+                  </div>
+                  <div id="scratchHintText" class="text-center text-[10px] font-bold text-gray-500">
+                    刮開 45% 自動揭曉或按下方按鈕
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 抽獎控制列 -->
+            <div class="w-full flex flex-col items-center text-center space-y-2">
+              <div class="w-full bg-macaron-yellow/70 border-2 border-macaron-yellowDark/60 rounded-2xl p-2">
+                <div class="text-[11px] font-bold text-amber-700/80">🎯 目前抽取進度</div>
+                <div id="currentPrizeStatus" class="text-sm font-black text-macaron-text mt-0.5">
+                  準備開始抽獎！
+                </div>
+              </div>
+
+              <p id="drawMessage" class="w-full text-xs font-bold text-red-500 bg-red-50 px-3 py-1.5 rounded-xl border border-red-200 hidden"></p>
+
+              <button id="mainDrawBtn" onclick="triggerDraw()" class="btn-kawaii w-full py-2.5 bg-gradient-to-r from-macaron-accent to-pink-400 text-white font-black text-base rounded-2xl shadow-md flex items-center justify-center gap-1.5">
+                <span id="mainBtnIcon">🎰</span>
+                <span id="mainBtnText">轉動扭蛋機！</span>
+              </button>
+
+              <div class="w-full grid grid-cols-2 gap-2">
+                <button onclick="drawAllEggs()" class="btn-kawaii py-2 px-2 bg-macaron-blue text-macaron-text font-bold text-xs rounded-xl border border-white">
+                  ⚡ 一鍵全開所有獎項
+                </button>
+                <button onclick="resetResults()" class="btn-kawaii py-2 px-2 bg-gray-100 text-gray-600 font-bold text-xs rounded-xl">
+                  🔄 重置抽獎
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- 幸運得獎名單區 -->
+        <section id="resultsSection" class="bg-white/95 rounded-3xl p-3.5 card-kawaii hidden">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="font-bold text-sm text-macaron-accent flex items-center gap-1">
+              <span>🏆</span> 幸運得獎名單
+            </h2>
+            <span id="totalWinnersBadge" class="text-[11px] font-bold text-gray-400"></span>
+          </div>
+          <div id="resultList" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1"></div>
+        </section>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 【新增】編輯/新增班級名單彈窗 (Modal) -->
+  <div id="classEditorModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+    <div id="classEditorCard" class="bg-white rounded-3xl p-5 w-full max-w-md card-kawaii transform scale-90 transition-transform duration-300 border-4 border-macaron-blueDark">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="classModalTitle" class="text-lg font-black text-sky-600 flex items-center gap-1.5">
+          <span>🏫</span> 新增預設班級
+        </h3>
+        <button onclick="closeClassModal()" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
+      </div>
+
+      <input type="hidden" id="editClassId">
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-macaron-text mb-1">班級名稱</label>
+          <input type="text" id="editClassName" placeholder="例如：三年一班、資優班 A 組"
+            class="w-full px-3 py-2 text-sm rounded-xl border-2 border-macaron-blue focus:outline-none focus:border-sky-400 font-bold">
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-xs font-bold text-macaron-text">學生姓名與抽獎券數量</label>
+            <span class="text-[11px] text-gray-400">每行一人（預設 1 張）</span>
+          </div>
+          <textarea id="editClassStudents" rows="7"
+            class="w-full p-2.5 text-xs rounded-xl border-2 border-macaron-blue focus:outline-none focus:border-sky-400 leading-relaxed"
+            placeholder="可直接從 Excel 複製貼上！格式範例：&#10;1號 王小明 3&#10;2號 李小華 5&#10;3號 陳大文 2&#10;4號 林小美"></textarea>
+        </div>
+
+        <div class="flex gap-2 pt-1">
+          <button onclick="closeClassModal()" class="btn-kawaii flex-1 py-2 bg-gray-100 text-gray-600 font-bold text-xs rounded-xl">
+            取消
+          </button>
+          <button onclick="saveClassData()" class="btn-kawaii flex-1 py-2 bg-sky-500 text-white font-black text-xs rounded-xl">
+            💾 儲存班級名單
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 中獎驚喜彈窗 (Modal) -->
+  <div id="eggModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+    <div id="modalCard" class="bg-white rounded-3xl p-6 w-full max-w-xs text-center card-kawaii transform scale-75 transition-transform duration-300 relative border-4 border-macaron-pink">
+      <div id="modalEmoji" class="text-6xl mb-2 animate-bounce">🎉</div>
+      <span class="inline-block px-3 py-1 bg-macaron-yellow text-macaron-text text-xs font-black rounded-full mb-1 border border-macaron-yellowDark" id="modalPrize">
+        獎項名稱
+      </span>
+      <p class="text-xs text-gray-400 font-bold mt-1">恭喜幸運得主</p>
+      <div id="modalWinner" class="text-3xl font-black text-macaron-accent my-3 tracking-wide">
+        得獎人名字
+      </div>
+      <button onclick="closeModal()" class="btn-kawaii w-full py-2.5 bg-macaron-accent text-white font-black text-sm rounded-2xl">
+        我超幸運!
+      </button>
+    </div>
+  </div>
+
+  <!-- Templates -->
+  <template id="student-template">
+    <div class="flex items-center gap-1 bg-gray-50/90 p-1 rounded-xl border border-gray-100">
+      <input type="text" class="studentName flex-1 text-xs p-1 rounded-lg border border-gray-200 focus:outline-none focus:border-macaron-pinkDark bg-white" placeholder="學生姓名">
+      <input type="number" min="1" step="1" class="studentTickets w-12 text-xs p-1 rounded-lg border border-gray-200 focus:outline-none focus:border-macaron-pinkDark bg-white text-center" placeholder="券數">
+      <button onclick="this.parentElement.remove(); updateTotal()" class="text-red-400 hover:text-red-600 px-1.5 text-xs font-bold" title="刪除">✕</button>
+    </div>
+  </template>
+
+  <template id="prize-template">
+    <div class="flex items-center gap-1 bg-gray-50/90 p-1 rounded-xl border border-gray-100">
+      <input type="text" class="prizeName flex-1 text-xs p-1 rounded-lg border border-gray-200 focus:outline-none focus:border-macaron-purple bg-white" placeholder="獎項名稱">
+      <input type="number" min="1" step="1" class="prizeCount w-12 text-xs p-1 rounded-lg border border-gray-200 focus:outline-none focus:border-macaron-purple bg-white text-center" placeholder="名額">
+      <button onclick="this.parentElement.remove(); updateStatusDisplay()" class="text-red-400 hover:text-red-600 px-1.5 text-xs font-bold" title="刪除">✕</button>
+    </div>
+  </template>
+
+  <template id="result-card-template">
+    <div class="bg-macaron-pinkLight/60 border border-macaron-pink/60 p-2.5 rounded-2xl">
+      <div class="flex justify-between items-center mb-1">
+        <h3 class="font-bold text-xs text-macaron-accent truncate"></h3>
+        <span class="text-[10px] text-gray-500 font-bold prizeQuota shrink-0 ml-1"></span>
+      </div>
+      <div class="winners flex flex-wrap gap-1 mt-1"></div>
+    </div>
+  </template>
+
+  <script>
+    // ================= 1. 狀態與資料管理 =================
+    const STORAGE_KEY = 'kawaii_lottery_classes_v1';
+    let savedClasses = [];
+    let currentMode = 'gacha';
+    let isAnimating = false;
+    let soundEnabled = true;
+    let winnersHistory = {}; // { prizeName: [winner1, winner2] }
+    let wheelRotation = 0;
+    let scratchRevealed = false;
+    let pendingScratchResult = null;
+
+    // 簡易 Web Audio API 音效合成器
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playTone(freq, type = 'sine', duration = 0.15, delay = 0) {
+      if (!soundEnabled) return;
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + delay);
+        osc.stop(audioCtx.currentTime + delay + duration);
+      } catch (e) {}
+    }
+
+    function playWinSound() {
+      [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => playTone(f, 'triangle', 0.25, i * 0.08));
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('soundIcon').textContent = soundEnabled ? '🔊' : '🔇';
+      document.getElementById('soundText').textContent = soundEnabled ? '音效開' : '音效關';
+    }
+
+    // ================= 2. 班級名單庫管理 (新增核心功能) =================
+    function loadSavedClasses() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        try {
+          savedClasses = JSON.parse(raw);
+        } catch (e) {
+          savedClasses = [];
+        }
+      }
+      // 若第一次開啟沒有資料，提供兩個範例班級供老師參考
+      if (!savedClasses || savedClasses.length === 0) {
+        savedClasses = [
+          {
+            id: 'demo-1',
+            name: '範例：三年一班',
+            students: [
+              { name: '王小明', tickets: 5 },
+              { name: '李小華', tickets: 3 },
+              { name: '陳大文', tickets: 4 },
+              { name: '林小美', tickets: 2 },
+              { name: '張志豪', tickets: 6 }
+            ]
+          },
+          {
+            id: 'demo-2',
+            name: '範例：四年二班',
+            students: [
+              { name: '周杰倫', tickets: 4 },
+              { name: '蔡依林', tickets: 5 },
+              { name: '林俊傑', tickets: 3 },
+              { name: '田馥甄', tickets: 4 }
+            ]
+          }
+        ];
+        persistClasses();
+      }
+      renderSavedClasses();
+    }
+
+    function persistClasses() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(savedClasses));
+    }
+
+    function renderSavedClasses() {
+      const container = document.getElementById('savedClassesList');
+      container.innerHTML = '';
+
+      if (savedClasses.length === 0) {
+        container.innerHTML = `<div class="text-center text-xs text-gray-400 py-6 bg-gray-50 rounded-2xl">尚未建立班級，請點擊上方「＋ 新增班級」</div>`;
+        return;
+      }
+
+      savedClasses.forEach(cls => {
+        const totalTickets = cls.students.reduce((sum, s) => sum + (parseInt(s.tickets) || 1), 0);
+        const card = document.createElement('div');
+        card.className = 'bg-sky-50/80 hover:bg-sky-100/70 transition-colors border-2 border-sky-100 rounded-2xl p-2.5 flex flex-col gap-2';
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-1">
+            <div>
+              <div class="font-black text-xs text-sky-800">${escapeHtml(cls.name)}</div>
+              <div class="text-[11px] text-sky-600/80 font-bold mt-0.5">
+                👨‍🎓 ${cls.students.length} 人 ｜ 🎫 ${totalTickets} 張券
+              </div>
+            </div>
+            <div class="flex items-center gap-1">
+              <button onclick="openClassModal('${cls.id}')" title="編輯班級" class="p-1 text-xs bg-white rounded-lg text-gray-500 hover:text-sky-600 shadow-sm">✏️</button>
+              <button onclick="deleteSavedClass('${cls.id}')" title="刪除班級" class="p-1 text-xs bg-white rounded-lg text-gray-400 hover:text-red-500 shadow-sm">🗑️</button>
+            </div>
+          </div>
+          <button onclick="importClassToDraw('${cls.id}')" class="btn-kawaii w-full py-1.5 bg-sky-500 hover:bg-sky-600 text-white font-black text-xs rounded-xl flex items-center justify-center gap-1">
+            <span>📥</span> 匯入此班級抽獎
+          </button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function parseLinesToStudents(text) {
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      const result = [];
+      lines.forEach(line => {
+        // 支援空白、Tab、逗號、冒號分隔
+        const match = line.match(/^(.+?)[\s,\t:：]+(\d+)$/);
+        if (match) {
+          result.push({ name: match[1].trim(), tickets: Math.max(1, parseInt(match[2], 10)) });
+        } else {
+          result.push({ name: line, tickets: 1 });
+        }
+      });
+      return result;
+    }
+
+    function openClassModal(classId = null) {
+      const modal = document.getElementById('classEditorModal');
+      const card = document.getElementById('classEditorCard');
+      const titleEl = document.getElementById('classModalTitle');
+      const idInput = document.getElementById('editClassId');
+      const nameInput = document.getElementById('editClassName');
+      const studentsInput = document.getElementById('editClassStudents');
+
+      if (classId) {
+        const target = savedClasses.find(c => c.id === classId);
+        if (!target) return;
+        titleEl.innerHTML = '<span>✏️</span> 編輯班級名單';
+        idInput.value = target.id;
+        nameInput.value = target.name;
+        studentsInput.value = target.students.map(s => `${s.name} ${s.tickets}`).join('\n');
+      } else {
+        titleEl.innerHTML = '<span>🏫</span> 新增預設班級';
+        idInput.value = '';
+        nameInput.value = '';
+        studentsInput.value = '';
+      }
+
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      card.classList.remove('scale-90');
+      card.classList.add('scale-100');
+    }
+
+    function closeClassModal() {
+      const modal = document.getElementById('classEditorModal');
+      const card = document.getElementById('classEditorCard');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      card.classList.remove('scale-100');
+      card.classList.add('scale-90');
+    }
+
+    function saveClassData() {
+      const id = document.getElementById('editClassId').value;
+      const name = document.getElementById('editClassName').value.trim();
+      const rawText = document.getElementById('editClassStudents').value;
+
+      if (!name) {
+        alert('請輸入班級名稱！');
+        return;
+      }
+      const students = parseLinesToStudents(rawText);
+      if (students.length === 0) {
+        alert('請至少輸入一位學生與抽獎券數量！');
+        return;
+      }
+
+      if (id) {
+        const idx = savedClasses.findIndex(c => c.id === id);
+        if (idx !== -1) {
+          savedClasses[idx] = { id, name, students };
+        }
+      } else {
+        savedClasses.push({
+          id: 'cls-' + Date.now(),
+          name,
+          students
+        });
+      }
+
+      persistClasses();
+      renderSavedClasses();
+      closeClassModal();
+      playTone(660, 'sine', 0.15);
+    }
+
+    function deleteSavedClass(id) {
+      const target = savedClasses.find(c => c.id === id);
+      if (!target) return;
+      if (confirm(`確定要刪除「${target.name}」的名單嗎？`)) {
+        savedClasses = savedClasses.filter(c => c.id !== id);
+        persistClasses();
+        renderSavedClasses();
+      }
+    }
+
+    function importClassToDraw(id) {
+      const target = savedClasses.find(c => c.id === id);
+      if (!target) return;
+
+      const list = document.getElementById('studentsList');
+      list.innerHTML = '';
+      target.students.forEach(s => addStudent(s.name, s.tickets));
+
+      const badge = document.getElementById('activeClassBadge');
+      badge.textContent = `📌 ${target.name}`;
+      badge.classList.remove('hidden');
+
+      resetResults(true);
+      updateTotal();
+      playWinSound();
+      showMessage(`已成功匯入「${target.name}」（共 ${target.students.length} 位學生）！`, false);
+    }
+
+    function saveCurrentToNewClass() {
+      const currentStudents = getStudentsData();
+      if (currentStudents.length === 0) {
+        alert('目前抽獎名單是空的，無法儲存成班級喔！');
+        return;
+      }
+      const className = prompt('請輸入要儲存的班級名稱（例如：五年三班）：');
+      if (!className || !className.trim()) return;
+
+      savedClasses.push({
+        id: 'cls-' + Date.now(),
+        name: className.trim(),
+        students: currentStudents
+      });
+      persistClasses();
+      renderSavedClasses();
+      playWinSound();
+      alert(`已將目前名單儲存為「${className.trim()}」！`);
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+
+    // ================= 3. 中間欄：學生與獎項清單控制 =================
+    function addStudent(name = '', tickets = 1) {
+      const tpl = document.getElementById('student-template');
+      const clone = tpl.content.cloneNode(true);
+      const nameInput = clone.querySelector('.studentName');
+      const ticketInput = clone.querySelector('.studentTickets');
+      nameInput.value = name;
+      ticketInput.value = tickets;
+      nameInput.addEventListener('input', updateTotal);
+      ticketInput.addEventListener('input', updateTotal);
+      document.getElementById('studentsList').appendChild(clone);
+      updateTotal();
+    }
+
+    function clearAllStudents() {
+      document.getElementById('studentsList').innerHTML = '';
+      document.getElementById('activeClassBadge').classList.add('hidden');
+      updateTotal();
+    }
+
+    function parseBatchInput(overwrite) {
+      const text = document.getElementById('batchInput').value;
+      const parsed = parseLinesToStudents(text);
+      if (parsed.length === 0) return;
+
+      if (overwrite) {
+        document.getElementById('studentsList').innerHTML = '';
+        document.getElementById('activeClassBadge').classList.add('hidden');
+      }
+      parsed.forEach(item => addStudent(item.name, item.tickets));
+      document.getElementById('batchInput').value = '';
+      updateTotal();
+    }
+
+    function getStudentsData() {
+      const rows = document.querySelectorAll('#studentsList > div');
+      const students = [];
+      rows.forEach(row => {
+        const name = row.querySelector('.studentName').value.trim();
+        const tickets = parseInt(row.querySelector('.studentTickets').value, 10) || 0;
+        if (name && tickets > 0) {
+          students.push({ name, tickets });
+        }
+      });
+      return students;
+    }
+
+    function updateTotal() {
+      const students = getStudentsData();
+      const totalTickets = students.reduce((acc, s) => acc + s.tickets, 0);
+      document.getElementById('studentTotalBadge').textContent = `學生人數：${students.length}｜抽獎券總數：${totalTickets}`;
+      renderGachaBalls(students.length);
+      updateStatusDisplay();
+    }
+
+    function addPrize(name = '', count = 1) {
+      const tpl = document.getElementById('prize-template');
+      const clone = tpl.content.cloneNode(true);
+      const nameInput = clone.querySelector('.prizeName');
+      const countInput = clone.querySelector('.prizeCount');
+      nameInput.value = name;
+      countInput.value = count;
+      nameInput.addEventListener('input', updateStatusDisplay);
+      countInput.addEventListener('input', updateStatusDisplay);
+      document.getElementById('prizesList').appendChild(clone);
+      updateStatusDisplay();
+    }
+
+    function getPrizesData() {
+      const rows = document.querySelectorAll('#prizesList > div');
+      const prizes = [];
+      rows.forEach(row => {
+        const name = row.querySelector('.prizeName').value.trim();
+        const count = parseInt(row.querySelector('.prizeCount').value, 10) || 0;
+        if (name && count > 0) {
+          prizes.push({ name, count });
+        }
+      });
+      return prizes;
+    }
+
+    // ================= 4. 抽獎核心邏輯 (加權隨機 + 不重複得獎) =================
+    function getNextPrizeToDraw() {
+      const prizes = getPrizesData();
+      for (const p of prizes) {
+        const drawnCount = (winnersHistory[p.name] || []).length;
+        if (drawnCount < p.count) {
+          return { prizeName: p.name, current: drawnCount + 1, total: p.count };
+        }
+      }
+      return null;
+    }
+
+    function getAlreadyWonSet() {
+      const won = new Set();
+      Object.values(winnersHistory).forEach(arr => arr.forEach(name => won.add(name)));
+      return won;
+    }
+
+    function pickWeightedWinner() {
+      const students = getStudentsData();
+      const wonSet = getAlreadyWonSet();
+      const eligible = students.filter(s => !wonSet.has(s.name));
+      if (eligible.length === 0) return null;
+
+      const totalWeight = eligible.reduce((sum, s) => sum + s.tickets, 0);
+      let rand = Math.random() * totalWeight;
+      for (const s of eligible) {
+        if (rand < s.tickets) return s.name;
+        rand -= s.tickets;
+      }
+      return eligible[eligible.length - 1].name;
+    }
+
+    function updateStatusDisplay() {
+      const next = getNextPrizeToDraw();
+      const statusEl = document.getElementById('currentPrizeStatus');
+      const btn = document.getElementById('mainDrawBtn');
+
+      if (!next) {
+        const prizes = getPrizesData();
+        statusEl.textContent = prizes.length === 0 ? '請先設定獎項！' : '🎊 所有獎項皆已抽出！';
+        btn.disabled = true;
+      } else {
+        statusEl.textContent = `正在抽取：【${next.prizeName}】(${next.current}/${next.total})`;
+        btn.disabled = isAnimating;
+      }
+    }
+
+    function showMessage(msg, isError = true) {
+      const el = document.getElementById('drawMessage');
+      el.textContent = msg;
+      el.className = isError
+        ? 'w-full text-xs font-bold text-red-500 bg-red-50 px-3 py-1.5 rounded-xl border border-red-200'
+        : 'w-full text-xs font-bold text-sky-700 bg-sky-50 px-3 py-1.5 rounded-xl border border-sky-200';
+      el.classList.remove('hidden');
+      setTimeout(() => el.classList.add('hidden'), 3500);
+    }
+
+    // ================= 5. 8種互動機台視覺與動畫 =================
+    const modeConfig = {
+      gacha: { icon: '🔮', btnText: '轉動扭蛋機！' },
+      claw: { icon: '🧸', btnText: '啟動夾娃娃機！' },
+      fishing: { icon: '🎣', btnText: '甩竿釣大獎！' },
+      balloon: { icon: '🎯', btnText: '射出幸運飛鏢！' },
+      wheel: { icon: '🎡', btnText: '轉動幸運大轉盤！' },
+      slot: { icon: '🎰', btnText: '拉下幸運拉桿！' },
+      blindbox: { icon: '🧧', btnText: '隨機開啟盲盒！' },
+      scratch: { icon: '🪙', btnText: '直接刮開幸運卡！' }
+    };
+
+    function switchMode(mode) {
+      if (isAnimating) return;
+      currentMode = mode;
+
+      document.querySelectorAll('.mode-tab').forEach(btn => {
+        btn.classList.remove('bg-macaron-accent', 'text-white', 'font-black');
+        btn.classList.add('bg-white/80', 'text-macaron-text', 'font-bold');
+      });
+      const activeTab = document.getElementById(`tab-${mode}`);
+      activeTab.classList.remove('bg-white/80', 'text-macaron-text', 'font-bold');
+      activeTab.classList.add('bg-macaron-accent', 'text-white', 'font-black');
+
+      document.querySelectorAll('.stage-view').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`stage-${mode}`).classList.remove('hidden');
+
+      document.getElementById('mainBtnIcon').textContent = modeConfig[mode].icon;
+      document.getElementById('mainBtnText').textContent = modeConfig[mode].btnText;
+
+      if (mode === 'balloon') initBalloons();
+      if (mode === 'blindbox') initBlindBoxes();
+      if (mode === 'scratch') prepareScratchCard();
+    }
+
+    function renderGachaBalls(count) {
+      const container = document.getElementById('ballsContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      const colors = ['#FF9EAA', '#FFE066', '#BAE6FD', '#D1FAE5', '#E9D5FF'];
+      const ballNum = Math.min(Math.max(count, 6), 14);
+      for (let i = 0; i < ballNum; i++) {
+        const ball = document.createElement('div');
+        ball.className = 'ball-item absolute w-6 h-6 rounded-full border-2 border-white shadow-sm';
+        ball.style.backgroundColor = colors[i % colors.length];
+        ball.style.bottom = `${8 + (i % 3) * 18}px`;
+        ball.style.left = `${14 + ((i * 23) % 85)}px`;
+        container.appendChild(ball);
+      }
+    }
+
+    function initBalloons() {
+      const grid = document.getElementById('balloonGrid');
+      grid.innerHTML = '';
+      const emojis = ['🎈', '🩷', '🩵', '💛', '💜', '🎈', '🩷', '💛', '🩵'];
+      emojis.forEach((em, idx) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'balloon-float text-3xl hover:scale-110 transition-transform cursor-pointer';
+        b.style.animationDelay = `${idx * 0.15}s`;
+        b.textContent = em;
+        b.onclick = () => triggerDraw(b);
+        grid.appendChild(b);
+      });
+    }
+
+    function initBlindBoxes() {
+      const grid = document.getElementById('blindBoxGrid');
+      grid.innerHTML = '';
+      for (let i = 0; i < 9; i++) {
+        const box = document.createElement('button');
+        box.type = 'button';
+        box.className = 'w-12 h-11 bg-gradient-to-br from-rose-400 to-amber-400 rounded-xl border-2 border-white shadow text-xl flex items-center justify-center hover:scale-105 transition-transform cursor-pointer';
+        box.textContent = '🎁';
+        box.onclick = () => triggerDraw(box);
+        grid.appendChild(box);
+      }
+    }
+
+    function prepareScratchCard() {
+      const canvas = document.getElementById('scratchCanvas');
+      const ctx = canvas.getContext('2d');
+      scratchRevealed = false;
+      pendingScratchResult = null;
+      document.getElementById('scratchPrizeLabel').textContent = '準備刮開好運';
+      document.getElementById('scratchWinnerLabel').textContent = '？？？';
+
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = '#CBD5E1';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#64748B';
+      ctx.font = 'bold 14px "Zen Maru Gothic", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('✨ 刮開銀漆揭曉 ✨', canvas.width / 2, canvas.height / 2 + 5);
+    }
+
+    // 刮刮樂互動監聽
+    (function setupScratchEvents() {
+      const canvas = document.getElementById('scratchCanvas');
+      const ctx = canvas.getContext('2d');
+      let isDrawing = false;
+
+      function scratchAt(x, y) {
+        if (scratchRevealed) return;
+        if (!pendingScratchResult) {
+          const next = getNextPrizeToDraw();
+          const winner = pickWeightedWinner();
+          if (!next || !winner) return;
+          pendingScratchResult = { prizeName: next.prizeName, winner };
+          document.getElementById('scratchPrizeLabel').textContent = next.prizeName;
+          document.getElementById('scratchWinnerLabel').textContent = winner;
+        }
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 檢查刮開比例
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        let cleared = 0;
+        for (let i = 3; i < imgData.length; i += 16) {
+          if (imgData[i] === 0) cleared++;
+        }
+        if (cleared / (imgData.length / 16) > 0.45) {
+          scratchRevealed = true;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          finalizeWinner(pendingScratchResult.prizeName, pendingScratchResult.winner, '🎫');
+        }
+      }
+
+      const getPos = e => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: (clientX - rect.left) * (canvas.width / rect.width),
+          y: (clientY - rect.top) * (canvas.height / rect.height)
+        };
+      };
+
+      canvas.addEventListener('mousedown', e => { isDrawing = true; const p = getPos(e); scratchAt(p.x, p.y); });
+      window.addEventListener('mouseup', () => { isDrawing = false; });
+      canvas.addEventListener('mousemove', e => { if (isDrawing) { const p = getPos(e); scratchAt(p.x, p.y); } });
+      canvas.addEventListener('touchstart', e => { isDrawing = true; const p = getPos(e); scratchAt(p.x, p.y); }, { passive: true });
+      canvas.addEventListener('touchmove', e => { if (isDrawing) { const p = getPos(e); scratchAt(p.x, p.y); } }, { passive: true });
+    })();
+
+    function triggerDraw(targetElement = null) {
+      if (isAnimating) return;
+      const next = getNextPrizeToDraw();
+      if (!next) {
+        showMessage('目前沒有可抽取的獎項，請先新增獎項或重置！');
+        return;
+      }
+      const winner = pickWeightedWinner();
+      if (!winner) {
+        showMessage('所有學生都已經中獎，或尚未輸入學生名單！');
+        return;
+      }
+
+      isAnimating = true;
+      updateStatusDisplay();
+
+      if (currentMode === 'gacha') {
+        const machine = document.getElementById('gachaMachine');
+        const knob = document.getElementById('gachaKnob');
+        const exit = document.getElementById('gachaExit');
+        exit.innerHTML = '';
+        machine.classList.add('shaking');
+        knob.classList.add('spin-knob');
+        playTone(440, 'sine', 0.1);
+        setTimeout(() => playTone(550, 'sine', 0.1), 200);
+
+        setTimeout(() => {
+          machine.classList.remove('shaking');
+          knob.classList.remove('spin-knob');
+          exit.innerHTML = `<div class="w-7 h-7 rounded-full bg-macaron-yellowDark border-2 border-white animate-drop flex items-center justify-center text-xs shadow">⭐</div>`;
+          setTimeout(() => finalizeWinner(next.prizeName, winner, '🔮'), 450);
+        }, 900);
+
+      } else if (currentMode === 'claw') {
+        const claw = document.getElementById('clawAssembly');
+        const rope = document.getElementById('clawRope');
+        const item = document.getElementById('clawGrabbedItem');
+        const positions = ['25%', '50%', '75%'];
+        claw.style.left = positions[Math.floor(Math.random() * positions.length)];
+        playTone(350, 'square', 0.15);
+
+        setTimeout(() => {
+          rope.style.height = '75px';
+          setTimeout(() => {
+            item.style.opacity = '1';
+            rope.style.height = '16px';
+            setTimeout(() => {
+              item.style.opacity = '0';
+              claw.style.left = '50%';
+              finalizeWinner(next.prizeName, winner, '🧸');
+            }, 550);
+          }, 500);
+        }, 450);
+
+      } else if (currentMode === 'fishing') {
+        const line = document.getElementById('fishingLine');
+        const hook = document.getElementById('hookedCatch');
+        line.style.height = '115px';
+        playTone(300, 'sine', 0.2);
+
+        setTimeout(() => {
+          hook.textContent = '🐠';
+          line.style.height = '32px';
+          setTimeout(() => {
+            hook.textContent = '🪝';
+            finalizeWinner(next.prizeName, winner, '🐠');
+          }, 550);
+        }, 650);
+
+      } else if (currentMode === 'balloon') {
+        const balloons = Array.from(document.querySelectorAll('#balloonGrid button:not(.balloon-pop)'));
+        const chosen = targetElement || balloons[Math.floor(Math.random() * balloons.length)] || document.querySelector('#balloonGrid button');
+        const dart = document.getElementById('flyingDart');
+        dart.style.transform = 'translate(-50%, -110px) scale(0.7)';
+        playTone(600, 'sawtooth', 0.1);
+
+        setTimeout(() => {
+          if (chosen) chosen.classList.add('balloon-pop');
+          dart.style.transform = 'translate(-50%, 0) scale(1)';
+          setTimeout(() => {
+            if (document.querySelectorAll('#balloonGrid button:not(.balloon-pop)').length === 0) initBalloons();
+            finalizeWinner(next.prizeName, winner, '🎈');
+          }, 300);
+        }, 300);
+
+      } else if (currentMode === 'wheel') {
+        const disc = document.getElementById('wheelDisc');
+        wheelRotation += 1080 + Math.floor(Math.random() * 360);
+        disc.style.transform = `rotate(${wheelRotation}deg)`;
+        [0, 0.2, 0.4, 0.7, 1.1, 1.6].forEach(d => playTone(500, 'triangle', 0.06, d));
+
+        setTimeout(() => finalizeWinner(next.prizeName, winner, '🎡'), 3250);
+
+      } else if (currentMode === 'slot') {
+        const symbols = ['🍓', '⭐', '👑', '🧸', '🍀', '💎'];
+        const reels = [0, 1, 2].map(i => document.getElementById(`slotReel${i}`));
+        reels.forEach(r => r.classList.add('slot-spinning'));
+        const timer = setInterval(() => {
+          reels.forEach(r => r.textContent = symbols[Math.floor(Math.random() * symbols.length)]);
+          playTone(480, 'sine', 0.04);
+        }, 90);
+
+        setTimeout(() => {
+          clearInterval(timer);
+          reels.forEach(r => {
+            r.classList.remove('slot-spinning');
+            r.textContent = '👑';
+          });
+          setTimeout(() => finalizeWinner(next.prizeName, winner, '🎰'), 300);
+        }, 1200);
+
+      } else if (currentMode === 'blindbox') {
+        const boxes = Array.from(document.querySelectorAll('#blindBoxGrid button'));
+        const chosen = targetElement || boxes[Math.floor(Math.random() * boxes.length)];
+        if (chosen) {
+          chosen.classList.add('box-wobble');
+          chosen.textContent = '✨';
+        }
+        playTone(580, 'triangle', 0.15);
+        setTimeout(() => {
+          if (chosen) {
+            chosen.classList.remove('box-wobble');
+            chosen.textContent = '🎁';
+          }
+          finalizeWinner(next.prizeName, winner, '🧧');
+        }, 500);
+
+      } else if (currentMode === 'scratch') {
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        document.getElementById('scratchPrizeLabel').textContent = next.prizeName;
+        document.getElementById('scratchWinnerLabel').textContent = winner;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        scratchRevealed = true;
+        setTimeout(() => finalizeWinner(next.prizeName, winner, '🎫'), 350);
+      }
+    }
+
+    function finalizeWinner(prizeName, winner, emoji = '🎉') {
+      if (!winnersHistory[prizeName]) winnersHistory[prizeName] = [];
+      winnersHistory[prizeName].push(winner);
+
+      isAnimating = false;
+      updateStatusDisplay();
+      renderResults();
+      playWinSound();
+
+      // 顯示中獎彈窗
+      document.getElementById('modalEmoji').textContent = emoji;
+      document.getElementById('modalPrize').textContent = prizeName;
+      document.getElementById('modalWinner').textContent = winner;
+      const modal = document.getElementById('eggModal');
+      const card = document.getElementById('modalCard');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      card.classList.remove('scale-75');
+      card.classList.add('scale-100');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('eggModal');
+      const card = document.getElementById('modalCard');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      card.classList.remove('scale-100');
+      card.classList.add('scale-75');
+      if (currentMode === 'scratch') prepareScratchCard();
+    }
+
+    function drawAllEggs() {
+      if (isAnimating) return;
+      let count = 0;
+      while (true) {
+        const next = getNextPrizeToDraw();
+        if (!next) break;
+        const winner = pickWeightedWinner();
+        if (!winner) break;
+        if (!winnersHistory[next.prizeName]) winnersHistory[next.prizeName] = [];
+        winnersHistory[next.prizeName].push(winner);
+        count++;
+      }
+      if (count === 0) {
+        showMessage('沒有剩餘可抽的獎項或符合資格的學生！');
+        return;
+      }
+      playWinSound();
+      updateStatusDisplay();
+      renderResults();
+    }
+
+    function resetResults(silent = false) {
+      if (isAnimating) return;
+      winnersHistory = {};
+      document.getElementById('resultsSection').classList.add('hidden');
+      document.getElementById('resultList').innerHTML = '';
+      if (currentMode === 'scratch') prepareScratchCard();
+      updateStatusDisplay();
+      if (!silent) playTone(380, 'sine', 0.12);
+    }
+
+    function renderResults() {
+      const section = document.getElementById('resultsSection');
+      const list = document.getElementById('resultList');
+      const prizes = getPrizesData();
+      list.innerHTML = '';
+
+      let totalWinners = 0;
+      prizes.forEach(p => {
+        const winners = winnersHistory[p.name] || [];
+        if (winners.length === 0) return;
+        totalWinners += winners.length;
+
+        const tpl = document.getElementById('result-card-template');
+        const clone = tpl.content.cloneNode(true);
+        clone.querySelector('h3').textContent = `🎁 ${p.name}`;
+        clone.querySelector('.prizeQuota').textContent = `${winners.length}/${p.count} 名`;
+
+        const winnersContainer = clone.querySelector('.winners');
+        winners.forEach(w => {
+          const tag = document.createElement('span');
+          tag.className = 'px-2 py-0.5 bg-white text-macaron-text font-black text-xs rounded-lg border border-macaron-pink shadow-xs';
+          tag.textContent = w;
+          winnersContainer.appendChild(tag);
+        });
+        list.appendChild(clone);
+      });
+
+      if (totalWinners > 0) {
+        section.classList.remove('hidden');
+        document.getElementById('totalWinnersBadge').textContent = `共抽出 ${totalWinners} 位幸運兒`;
+      }
+    }
+
+    // ================= 6. 初始化預設資料 =================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedClasses();
+      // 預設載入第一個班級與預設獎項
+      if (savedClasses.length > 0) {
+        savedClasses[0].students.forEach(s => addStudent(s.name, s.tickets));
+        const badge = document.getElementById('activeClassBadge');
+        badge.textContent = `📌 ${savedClasses[0].name}`;
+        badge.classList.remove('hidden');
+      }
+      addPrize('頭獎：精美文具組', 1);
+      addPrize('二獎：免寫作業券一張', 2);
+      addPrize('三獎：可愛小貼紙', 3);
+      updateTotal();
+    });
+  </script>
+</body>
+</html>
